@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "i-love-my-plants",
+    "name": "I love my plants !",
     "slug": "i-love-my-plants",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/ilmp-logo.png",
     "scheme": "ilovemyplants",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
