@@ -33,7 +33,7 @@ export default function AddPlant() {
             }, {
               headers: {
                 'Content-Type': 'application/json',
-                'Api-Key': 'F7x5wPg4BnePctuk5CFDrCSsjMrk6WQHBsHysVkvYSqKJYKgCM' // Replace with your actual API key
+                'Api-Key': process.env.EXPO_PUBLIC_PLANT_ID_API_KEY
               }
             });
 
