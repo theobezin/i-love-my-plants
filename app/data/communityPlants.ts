@@ -7,7 +7,7 @@ export const communityPlants: Plant[] = [
     species: 'Monstera deliciosa',
     frequencyDays: 7,
     createdAt: new Date().toISOString(),
-    imageUri: require('../../assets/images/1.jpg') as unknown as string,
+    imageUri: "",
   },
   {
     id: 'community-2',
@@ -15,7 +15,7 @@ export const communityPlants: Plant[] = [
     species: 'Sansevieria trifasciata',
     frequencyDays: 14,
     createdAt: new Date().toISOString(),
-    imageUri: require('../../assets/images/2.jpg') as unknown as string,
+    imageUri: "",
   },
   {
     id: 'community-3',
@@ -23,6 +23,6 @@ export const communityPlants: Plant[] = [
     species: 'Epipremnum aureum',
     frequencyDays: 7,
     createdAt: new Date().toISOString(),
-    imageUri: require('../../assets/images/3.jpg') as unknown as string,
+    imageUri: "",
   },
 ];

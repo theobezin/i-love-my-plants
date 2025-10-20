@@ -1,6 +1,11 @@
 ## I LOVE MY PLANTS
 # Personal projects for learning how to develop on mobile using javascript
 
+![Page d'accueil](./assets/images/screen3.jpg)
+![Ajout d'une plante](./assets/images/screen4.jpg)
+![Exemple plante](./assets/images/screen1.jpg)
+![Exemple plante](./assets/images/screen2.jpg)
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
