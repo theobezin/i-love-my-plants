@@ -7,4 +7,5 @@ export type Plant = {
   frequencyDays: number;        // tous les X jours
   lastWateredAt?: string;       // ISO date string
   createdAt: string;            // ISO
+  imageUri?: string;            // URI of the plant photo
 };
