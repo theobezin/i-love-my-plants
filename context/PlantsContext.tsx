@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { loadPlants, savePlants } from '@/lib/storage';
 import { Plant, PlantId } from '@/types';
+import { randomUUID } from 'expo-crypto';
 
 type PlantsState = {
   plants: Plant[];
@@ -31,7 +32,7 @@ export function PlantsProvider({ children }: { children: React.ReactNode }) {
 
   async function addPlant(p: Omit<Plant,'id'|'createdAt'>) {
     const now = new Date().toISOString();
-    const plant: Plant = { ...p, id: crypto.randomUUID(), createdAt: now };
+    const plant: Plant = { ...p, id: randomUUID(), createdAt: now };
     await persist([plant, ...plants]);
   }
 

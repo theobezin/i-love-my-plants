@@ -15,7 +15,7 @@ export default function PlantCard({ plant }: { plant: Plant }) {
   const d = daysUntilNextWatering(plant);
 
   return (
-    <Link href={`/plants/${plant.id}`} asChild>
+    <Link href={{ pathname: '/plants/[id]', params: { id: String(plant.id) } }} asChild>
       <Pressable style={{
         padding: 16, marginHorizontal: 16, marginVertical: 8,
         borderRadius: 12, backgroundColor: '#fff', elevation: 2
