@@ -1,14 +1,25 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Plant } from '@/types';
+import { Plant, Room } from '@/types';
 
-const KEY = 'ILMP::plants';
+const PLANTS_KEY = 'ILMP::plants';
+const ROOMS_KEY = 'ILMP::rooms';
 
 export async function loadPlants(): Promise<Plant[]> {
-  const raw = await AsyncStorage.getItem(KEY);
+  const raw = await AsyncStorage.getItem(PLANTS_KEY);
   if (!raw) return [];
   try { return JSON.parse(raw) as Plant[]; } catch { return []; }
 }
 
 export async function savePlants(plants: Plant[]): Promise<void> {
-  await AsyncStorage.setItem(KEY, JSON.stringify(plants));
+  await AsyncStorage.setItem(PLANTS_KEY, JSON.stringify(plants));
+}
+
+export async function loadRooms(): Promise<Room[]> {
+  const raw = await AsyncStorage.getItem(ROOMS_KEY);
+  if (!raw) return [];
+  try { return JSON.parse(raw) as Room[]; } catch { return []; }
+}
+
+export async function saveRooms(rooms: Room[]): Promise<void> {
+  await AsyncStorage.setItem(ROOMS_KEY, JSON.stringify(rooms));
 }

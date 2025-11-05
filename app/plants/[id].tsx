@@ -6,7 +6,7 @@ import { Alert, Image, Modal, Pressable, Text, TouchableOpacity, View } from 're
 export default function PlantDetail() {
   const [modalVisible, setModalVisible] = useState(false);
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { getPlant, waterPlant, removePlant } = usePlants();
+  const { getPlant, waterPlant, removePlant, rooms, addPlantToRoom, removePlantFromRoom } = usePlants();
   const plant = id ? getPlant(id) : undefined;
 
   if (!plant) {
@@ -14,6 +14,8 @@ export default function PlantDetail() {
   }
 
   const last = plant.lastWateredAt ? new Date(plant.lastWateredAt).toLocaleDateString() : 'jamais';
+  
+  const plantRooms = rooms.filter(room => room.plantIds.includes(plant.id));
 
   return (
     <View style={{ padding: 16, gap: 12 }}>
@@ -31,9 +33,79 @@ export default function PlantDetail() {
       <Text>Fréquence : tous les {plant.frequencyDays} jours</Text>
       <Text>Dernier arrosage : {last}</Text>
 
-      <Pressable onPress={async () => { await waterPlant(plant.id); }}
-        style={{ backgroundColor:'#1565c0', padding:14, borderRadius:10, alignItems:'center' }}>
-        <Text style={{ color:'#fff', fontWeight:'600' }}>Arrosée aujourd’hui</Text>
+      {/* Rooms section */}
+      <View style={{ marginTop: 8 }}>
+        <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 8 }}>Pièces</Text>
+        {plantRooms.length === 0 ? (
+          <Text style={{ opacity: 0.7 }}>Cette plante n'est pas assignée à une pièce</Text>
+        ) : (
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+            {plantRooms.map(room => (
+              <Pressable
+                key={room.id}
+                onPress={() => {
+                  Alert.alert(
+                    'Retirer de la pièce',
+                    `Retirer ${plant.name} de ${room.name} ?`,
+                    [
+                      { text: 'Annuler', style: 'cancel' },
+                      { 
+                        text: 'Retirer',
+                        style: 'destructive',
+                        onPress: () => removePlantFromRoom(plant.id, room.id)
+                      },
+                    ]
+                  );
+                }}
+                style={{
+                  backgroundColor: '#e3f2fd',
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                  borderRadius: 16
+                }}
+              >
+                <Text style={{ color: '#1565c0' }}>{room.name} ×</Text>
+              </Pressable>
+            ))}
+          </View>
+        )}
+        
+        {/* Add to room button */}
+        {rooms.length > plantRooms.length && (
+          <Pressable
+            onPress={() => {
+              const availableRooms = rooms.filter(r => !plantRooms.find(pr => pr.id === r.id));
+              Alert.alert(
+                'Ajouter à une pièce',
+                'Choisir une pièce:',
+                [
+                  { text: 'Annuler', style: 'cancel' },
+                  ...availableRooms.map(room => ({
+                    text: room.name,
+                    onPress: () => addPlantToRoom(plant.id, room.id)
+                  }))
+                ]
+              );
+            }}
+            style={{
+              marginTop: 8,
+              padding: 8,
+              borderRadius: 8,
+              borderWidth: 1,
+              borderColor: '#1565c0',
+              alignItems: 'center'
+            }}
+          >
+            <Text style={{ color: '#1565c0' }}>Ajouter à une pièce</Text>
+          </Pressable>
+        )}
+      </View>
+
+      <Pressable
+        onPress={async () => { await waterPlant(plant.id); }}
+        style={{ backgroundColor:'#1565c0', padding:14, borderRadius:10, alignItems:'center', marginTop: 16 }}
+      >
+        <Text style={{ color:'#fff', fontWeight:'600' }}>Arrosée aujourd'hui</Text>
       </Pressable>
 
       <Pressable onPress={() => {

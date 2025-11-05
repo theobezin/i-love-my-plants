@@ -9,3 +9,11 @@ export type Plant = {
   createdAt: string;            // ISO
   imageUri?: string;            // URI of the plant photo
 };
+
+export type RoomId = string;
+
+export type Room = {
+  id: RoomId;
+  name: string;
+  plantIds: PlantId[];
+};
