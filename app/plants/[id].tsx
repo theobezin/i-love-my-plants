@@ -1,13 +1,14 @@
 import { usePlants } from '@/context/PlantsContext';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Image, Modal, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Modal, Pressable, Text, TouchableOpacity, View, ScrollView } from 'react-native';
 
 export default function PlantDetail() {
   const [modalVisible, setModalVisible] = useState(false);
   const { id } = useLocalSearchParams<{ id: string }>();
   const { getPlant, waterPlant, removePlant, rooms, addPlantToRoom, removePlantFromRoom } = usePlants();
   const plant = id ? getPlant(id) : undefined;
+  const [roomPickerVisible, setRoomPickerVisible] = useState(false);
 
   if (!plant) {
     return <View style={{ padding: 16 }}><Text>Plante introuvable.</Text></View>;
@@ -73,20 +74,7 @@ export default function PlantDetail() {
         {/* Add to room button */}
         {rooms.length > plantRooms.length && (
           <Pressable
-            onPress={() => {
-              const availableRooms = rooms.filter(r => !plantRooms.find(pr => pr.id === r.id));
-              Alert.alert(
-                'Ajouter à une pièce',
-                'Choisir une pièce:',
-                [
-                  { text: 'Annuler', style: 'cancel' },
-                  ...availableRooms.map(room => ({
-                    text: room.name,
-                    onPress: () => addPlantToRoom(plant.id, room.id)
-                  }))
-                ]
-              );
-            }}
+            onPress={() => setRoomPickerVisible(true)}
             style={{
               marginTop: 8,
               padding: 8,
@@ -128,6 +116,25 @@ export default function PlantDetail() {
             style={{ width: '90%', height: '70%', borderRadius: 16 }}
             resizeMode="contain"
           />
+        </View>
+      </Modal>
+
+      {/* Modal: pick a room to add this plant to */}
+      <Modal visible={roomPickerVisible} transparent animationType="slide" onRequestClose={() => setRoomPickerVisible(false)}>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'flex-end' }}>
+          <View style={{ backgroundColor: '#fff', borderTopLeftRadius: 12, borderTopRightRadius: 12, padding: 16, maxHeight: '60%' }}>
+            <Text style={{ fontSize: 18, fontWeight: '700', marginBottom: 12 }}>Ajouter à une pièce</Text>
+            <ScrollView style={{ marginBottom: 12 }}>
+              {rooms.filter(r => !plantRooms.find(pr => pr.id === r.id)).map(room => (
+                <Pressable key={room.id} onPress={async () => { await addPlantToRoom(plant.id, room.id); setRoomPickerVisible(false); }} style={{ paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#f0f0f0' }}>
+                  <Text style={{ fontSize: 16 }}>{room.name}</Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+            <Pressable onPress={() => setRoomPickerVisible(false)} style={{ alignSelf: 'flex-end', padding: 8 }}>
+              <Text style={{ color: '#1565c0' }}>Annuler</Text>
+            </Pressable>
+          </View>
         </View>
       </Modal>
     </View>

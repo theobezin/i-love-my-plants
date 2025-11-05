@@ -65,16 +65,6 @@ export default function Home() {
         )
       ) : (
         <View style={{ flex: 1 }}>
-          <View style={{ paddingHorizontal: 16, marginBottom: 8, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={{ fontSize: 20, fontWeight: '700' }}>Pièces</Text>
-            <Pressable
-              onPress={() => setRoomModalVisible(true)}
-              style={{ backgroundColor: '#1565c0', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 8 }}
-            >
-              <Text style={{ color: '#fff' }}>Ajouter</Text>
-            </Pressable>
-          </View>
-
           {rooms.length === 0 ? (
               <EmptyState message="Aucune pièce. Ajoutez-en une pour commencer!" />
             ) : (
@@ -127,7 +117,18 @@ export default function Home() {
               }}
             />
           )}
+          <Pressable
+              onPress={() => setRoomModalVisible(true)}
+              style={{
+                position: 'absolute', right: 16, bottom: 16,
+                backgroundColor: '#2e7d32', paddingHorizontal: 20, paddingVertical: 14,
+                borderRadius: 28, elevation: 3
+              }}
+            >
+              <Text style={{ color: '#fff' }}>Ajouter</Text>
+            </Pressable>
         </View>
+        
       )}
       {/* Add plant floating button */}
       {tab === 'mine' && (

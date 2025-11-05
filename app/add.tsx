@@ -1,5 +1,6 @@
 import { usePlants } from '@/context/PlantsContext';
 import axios from 'axios';
+import { isDev, mockIdentify } from '@/lib/config';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -25,24 +26,30 @@ export default function AddPlant() {
         reader.onloadend = async () => {
           const base64data = (reader.result as string).split(',')[1];
           
-          // Make API call to Plant.id
+          // Make API call to Plant.id (or use mock in dev)
           try {
-            const apiRes = await axios.post('https://api.plant.id/v2/identify', {
-              images: [base64data],
-              plant_details: ["common_names", "wiki_description", "watering_description"]
-            }, {
-              headers: {
-                'Content-Type': 'application/json',
-                'Api-Key': process.env.EXPO_PUBLIC_PLANT_ID_API_KEY
-              }
-            });
+            let apiRes: any;
+            if (isDev) {
+              apiRes = await mockIdentify();
+            } else {
+              apiRes = await axios.post('https://api.plant.id/v2/identify', {
+                images: [base64data],
+                plant_details: ["common_names", "wiki_description", "watering_description"]
+              }, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Api-Key': process.env.EXPO_PUBLIC_PLANT_ID_API_KEY
+                }
+              }).then(r => r.data);
+            }
 
-            if (apiRes.data.suggestions && apiRes.data.suggestions.length > 0) {
-              const plant = apiRes.data.suggestions[0];
+            const suggestions = apiRes?.suggestions || [];
+            if (suggestions.length > 0) {
+              const plant = suggestions[0];
               setSpecies(plant.plant_name);
-              
+
               // Set watering frequency based on watering description
-              const wateringDesc = plant.plant_details.watering_description?.toLowerCase() || '';
+              const wateringDesc = plant.plant_details?.watering_description?.toLowerCase() || '';
               if (wateringDesc.includes('daily')) setFrequencyDays('1');
               else if (wateringDesc.includes('twice a week')) setFrequencyDays('3');
               else if (wateringDesc.includes('weekly')) setFrequencyDays('7');
